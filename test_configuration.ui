@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Test_Configuration</class>
+ <widget class="QDialog" name="Test_Configuration">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Test settings</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>240</y>
+     <width>341</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Orientation::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_Language">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>30</y>
+     <width>151</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Ask for</string>
+   </property>
+   <widget class="QRadioButton" name="radioButton_NativeLang">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>89</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>German</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_ForeignLang">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>89</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>English</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_Mixed">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>89</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mixed</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_Cycles">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>30</y>
+     <width>171</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Ask how many times</string>
+   </property>
+   <widget class="QSpinBox" name="spinBox_Cycles">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>10</number>
+    </property>
+    <property name="value">
+     <number>2</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_Delay">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>170</y>
+     <width>151</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Delay</string>
+   </property>
+   <widget class="QLabel" name="label_Delay">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>50</y>
+      <width>49</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ms</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_Delay">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>71</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="inputMask">
+     <string/>
+    </property>
+    <property name="text">
+     <string>2000</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Test_Configuration</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Test_Configuration</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

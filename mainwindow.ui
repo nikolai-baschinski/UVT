@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1377</width>
+    <height>703</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Universal Vocabulary Trainer</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pushButton_CreateNewLesson">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>390</y>
+      <width>191</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Create new lesson</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>291</width>
+      <height>361</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>20</y>
+      <width>561</width>
+      <height>471</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_AddFolder">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>550</y>
+      <width>141</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add new directory</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="plainTextEdit_Folders">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>430</y>
+      <width>291</width>
+      <height>111</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_UpdateLessensView">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>550</y>
+      <width>131</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Refresh list</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_TestLesson">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>550</y>
+      <width>161</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test lesson</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Save">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>500</y>
+      <width>161</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save lesson</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_InsertRowAbove">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>500</y>
+      <width>171</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add row above</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_InsertRowBelow">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>530</y>
+      <width>171</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add row below</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_AddRowBelow">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>560</y>
+      <width>171</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add row at the bottom</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_RemoveRow">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>590</y>
+      <width>171</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Delete row</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_SearchString">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>20</y>
+      <width>411</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Search">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>60</y>
+      <width>160</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Search</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="plainTextEdit_SearchResults">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>100</y>
+      <width>411</width>
+      <height>391</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_ApplicationSettings">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>590</y>
+      <width>141</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Settings</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1377</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
