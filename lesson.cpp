@@ -1,4 +1,4 @@
-#include "lesson.h"
+#include "Lesson.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>

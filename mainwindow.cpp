@@ -50,7 +50,7 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
         QDir dir(folders.at(i));
         if (dir.exists()) {
             this->loadLessons(dir);
-            this->ui->plainTextEdit_Folders->appendPlainText(dir.absolutePath());
+            this->ui->plainTextEdit_Folders->appendPlainText(dir.path());
         }
     }
 
