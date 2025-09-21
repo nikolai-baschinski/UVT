@@ -13,3 +13,5 @@ The application is written in Qt. To build the application do this:
 If you want to try the application, do this:
 1. git clone https://github.com/nikolai-baschinski/UVT.git
 2. Run the setup inside the folder "Windows Installation Setup"
+
+!(/doc/GUI.png)
