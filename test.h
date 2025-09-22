@@ -20,6 +20,7 @@ class Test : public QDialog
 public:
     explicit Test(Test_Settings& settings, Lesson* pLesson, MainWindow* pParent = nullptr);
     ~Test();
+
 private slots:
     void pushButton_StopTest();
     void pushButton_GoOn();
@@ -30,11 +31,13 @@ private:
     MainWindow* pMainWindow;
     QVector<Word> words;
     unsigned int currentWordIndex;
-    Language questionLang;
+    Language questionLangCurrent;
+    Language questionLangSetting;
     QTimer *timer;
     unsigned int delay;
-    void displayWord();
     unsigned int valueWordsToTest;
+
+    void displayWord();
     bool eventFilter(QObject *obj, QEvent *event);
 };
 

@@ -35,18 +35,19 @@ Test::Test(Test_Settings& settings, Lesson* pLesson, MainWindow* pParent)
     this->ui->label_NativeLang->setText(this->pMainWindow->getNativeString());
     QFileInfo fileInfo (pLesson->path);
     this->setWindowTitle(tr("Test of the lesson ") + fileInfo.fileName());
+    this->questionLangSetting = settings.language;
 
-    if(settings.language == Mixed) {
+    if(this->questionLangSetting == Mixed) {
         int rand = QRandomGenerator::global()->bounded(2);
         if(rand == 0) {
-            this->questionLang = Language::Foreign;
+            this->questionLangCurrent = Language::Foreign;
         } else {
-            this->questionLang = Language::Native;
+            this->questionLangCurrent = Language::Native;
         }
-    } else if(settings.language == Language::Foreign) {
-        this->questionLang = Language::Foreign;
+    } else if(this->questionLangSetting == Language::Foreign) {
+        this->questionLangCurrent = Language::Foreign;
     } else {
-        this->questionLang = Language::Native;
+        this->questionLangCurrent = Language::Native;
     }
 
     this->displayWord();
@@ -60,26 +61,48 @@ Test::~Test()
 
 void Test::displayWord()
 {
+    if(this->questionLangSetting == Mixed) {
+        int rand = QRandomGenerator::global()->bounded(2);
+        if(rand == 0) {
+            this->questionLangCurrent = Language::Foreign;
+        } else {
+            this->questionLangCurrent = Language::Native;
+        }
+    } else if(this->questionLangSetting == Language::Foreign) {
+        this->questionLangCurrent = Language::Foreign;
+    } else {
+        this->questionLangCurrent = Language::Native;
+    }
+
     this->currentWordIndex = QRandomGenerator::global()->bounded(this->words.count());
-    if(this->questionLang == Language::Native) {
+
+    if(this->questionLangCurrent == Language::Native) {
+        // Asking for the native word
+        this->ui->lineEdit_ForeignLang->setStyleSheet("QLineEdit { color: black; }");
         this->ui->lineEdit_ForeignLang->setText(this->words.at(this->currentWordIndex).foreign);
         this->ui->lineEdit_ForeignLang->setReadOnly(true);
+
+        this->ui->textEdit_NativeLang->clear();
+        this->ui->textEdit_NativeLang->setReadOnly(false);
         this->ui->textEdit_NativeLang->setFocus();
 
         qsizetype count = this->words.at(this->currentWordIndex).natives.count();
         this->ui->label_NumberTranslations->setText("(" + QString::number(count) + ")");
 
-        this->ui->textEdit_NativeLang->clear();
     } else {
+        // Asking for the foreign word
         this->ui->textEdit_NativeLang->clear();
+        this->ui->textEdit_NativeLang->setTextColor(Qt::black);
         for(int i = 0; i < this->words.at(this->currentWordIndex).natives.count(); i++) {
             this->ui->textEdit_NativeLang->append(this->words.at(this->currentWordIndex).natives.at(i).native);
         }
         this->ui->textEdit_NativeLang->setReadOnly(true);
-        this->ui->lineEdit_ForeignLang->setFocus();
-        this->ui->label_NumberTranslations->setText("");
 
         this->ui->lineEdit_ForeignLang->clear();
+        this->ui->lineEdit_ForeignLang->setReadOnly(false);
+        this->ui->lineEdit_ForeignLang->setFocus();
+
+        this->ui->label_NumberTranslations->setText("");
     }
 }
 
@@ -98,7 +121,7 @@ void Test::pushButton_GoOn()
     QString foreignWordByUser = this->ui->lineEdit_ForeignLang->text().trimmed();
     Word currentWord = this->words.at(this->currentWordIndex); // needed for search
 
-    if(this->questionLang == Language::Native) {
+    if(this->questionLangCurrent == Language::Native) {
         QString translations = this->ui->textEdit_NativeLang->toPlainText();
         QStringList translationsList = translations.split('\n', Qt::SkipEmptyParts);
 
@@ -178,9 +201,6 @@ void Test::onTimer()
         this->close();
     } else {
         this->displayWord();
-
-        this->ui->textEdit_NativeLang->setTextColor(Qt::black);
-        ui->lineEdit_ForeignLang->setStyleSheet("QLineEdit { color: black; }");
     }
 }
 
