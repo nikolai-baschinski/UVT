@@ -16,6 +16,6 @@ If you want to try the application, do this:
 
 ![](/doc/GUI_MainWindow.png)
 
-![](/doc/GUI_Test Settings.png)
+![](/doc/GUI_Test_Settings.png)
 
 ![](/doc/GUI_Test.png)
