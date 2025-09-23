@@ -75,10 +75,11 @@ void Test::displayWord()
     }
 
     this->currentWordIndex = QRandomGenerator::global()->bounded(this->words.count());
+    this->ui->lineEdit_ForeignLang->setStyleSheet("QLineEdit { color: black; }");
+    this->ui->textEdit_NativeLang->setTextColor(Qt::black);
 
     if(this->questionLangCurrent == Language::Native) {
         // Asking for the native word
-        this->ui->lineEdit_ForeignLang->setStyleSheet("QLineEdit { color: black; }");
         this->ui->lineEdit_ForeignLang->setText(this->words.at(this->currentWordIndex).foreign);
         this->ui->lineEdit_ForeignLang->setReadOnly(true);
 
@@ -92,7 +93,6 @@ void Test::displayWord()
     } else {
         // Asking for the foreign word
         this->ui->textEdit_NativeLang->clear();
-        this->ui->textEdit_NativeLang->setTextColor(Qt::black);
         for(int i = 0; i < this->words.at(this->currentWordIndex).natives.count(); i++) {
             this->ui->textEdit_NativeLang->append(this->words.at(this->currentWordIndex).natives.at(i).native);
         }
