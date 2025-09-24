@@ -2,12 +2,13 @@
 #define TEST_H
 
 #include <QDialog>
-#include "test_settings.h"
 #include <QVector>
 #include <QLabel>
+#include <QTextCursor>
+#include "test_settings.h"
 #include "Lesson.h"
 #include "mainwindow.h"
-#include <QTextCursor>
+
 
 namespace Ui {
 class Test;
@@ -39,6 +40,7 @@ private:
 
     void displayWord();
     bool eventFilter(QObject *obj, QEvent *event);
+    void showSearchResult(const Lesson* pLesson, const Word* word);
 };
 
 #endif // TEST_H

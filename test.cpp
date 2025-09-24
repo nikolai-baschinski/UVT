@@ -120,10 +120,10 @@ void Test::pushButton_GoOn()
     QTextCharFormat greenFormat;
     QString foreignWordByUser = this->ui->lineEdit_ForeignLang->text().trimmed();
     Word currentWord = this->words.at(this->currentWordIndex); // needed for search
+    QString translations = this->ui->textEdit_NativeLang->toPlainText();
+    QStringList translationsList = translations.split('\n', Qt::SkipEmptyParts);
 
     if(this->questionLangCurrent == Language::Native) {
-        QString translations = this->ui->textEdit_NativeLang->toPlainText();
-        QStringList translationsList = translations.split('\n', Qt::SkipEmptyParts);
 
         this->ui->textEdit_NativeLang->clear();
 
@@ -166,21 +166,28 @@ void Test::pushButton_GoOn()
 
     // Look for the word that was confound
     auto lessons = pMainWindow->getLessons();
-    const Lesson* pLesson;
-    for(unsigned int i = 0; i < lessons.count(); i++) {
-        pLesson = lessons.at(i);
-        for(unsigned int j = 0; j < pLesson->words.count(); j++) {
+    for(int i = 0; i < lessons.count(); i++) { // search in all loaded lesson
+        const Lesson* pLesson = lessons.at(i);
+        for(int j = 0; j < pLesson->words.count(); j++) { // search in all the words of the lesson
             const Word& word = pLesson->words.at(j);
-            if(word.foreign != currentWord.foreign) {
-                if(word.foreign == foreignWordByUser) {
-                    QString info = pLesson->path + '\n' + word.foreign + " - ";
-                    for(int n = 0; n < word.natives.count(); n++) {
-                        info.append(word.natives.at(n).native);
-                        if(n < word.natives.count()-1) {
-                            info.append(", ");
+            if(word != currentWord) { // except the current word
+                if(this->questionLangCurrent == Language::Native) {
+                    // a word can have more than one native translations. Search for each.
+
+                    for(int k = 0; k < word.natives.count(); k++) {
+                        QString currentTranslation = word.natives.at(k).native;
+                        QString userInputTranslation;
+                        for (int m = 0; m < translationsList.count(); m++) {
+                            userInputTranslation = translationsList.at(m).trimmed();
+                            if(currentTranslation == userInputTranslation) {
+                                this->showSearchResult(pLesson, &word);
+                            }
                         }
                     }
-                    QMessageBox::information(this, tr("Info"), info);
+                } else {
+                    if(word.foreign == foreignWordByUser) {
+                        this->showSearchResult(pLesson, &word);
+                    }
                 }
             }
         }
@@ -215,4 +222,24 @@ bool Test::eventFilter(QObject *obj, QEvent *event)
         }
     }
     return QObject::eventFilter(obj, event);
+}
+
+void Test::showSearchResult(const Lesson* pLesson, const Word* word)
+{
+    QString info = pLesson->path + '\n' + word->foreign + " - ";
+    for(int i = 0; i < word->natives.count(); i++) {
+        info.append(word->natives.at(i).native);
+        if(i < word->natives.count()-1) {
+            info.append(", ");
+        }
+    }
+
+    QMessageBox msgBox(this);
+    msgBox.setWindowTitle(tr("Info"));
+    msgBox.setText(info);
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.addButton(QMessageBox::Ok);
+
+    msgBox.move(this->geometry().center() + QPoint(50, 0));
+    msgBox.exec();
 }

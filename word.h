@@ -11,7 +11,9 @@ public:
     Word();
     QString foreign;
     QList<UVT::Native> natives;
-    unsigned int id;
+
+    bool operator==(const Word& word_to_compare_with) const;
+    bool operator!=(const Word& word_to_compare_with) const;
 };
 
 #endif // WORD_H
