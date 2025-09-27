@@ -32,7 +32,7 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users).
 PrivilegesRequired=lowest
 OutputDir=C:\UVT
-OutputBaseFilename=UVT 0.1
+OutputBaseFilename=UVT
 SolidCompression=yes
 WizardStyle=modern
 
