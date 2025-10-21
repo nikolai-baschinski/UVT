@@ -25,6 +25,7 @@ private:
     Ui::ApplicationSettings *ui;
     void onComboBoxTextChanged();
     QString currentLanguage;
+    void onSpinBoxValueChanged(int newValue);
 };
 
 #endif // APPLICATIONSETTINGS_H

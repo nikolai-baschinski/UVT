@@ -33,6 +33,11 @@
         <source>Application&apos;s language</source>
         <translation>Sprache der Anwendung</translation>
     </message>
+    <message>
+        <location filename="applicationsettings.ui" line="117"/>
+        <source>Font size</source>
+        <translation>Schriftgröße</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

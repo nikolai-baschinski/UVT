@@ -32,8 +32,10 @@ ApplicationSettings::ApplicationSettings(MainWindow* pParamParent)
     }
 
     this->ui->comboBox_ApplicationsLanguage->setCurrentIndex(memoryIndex);
+    this->ui->spinBox_FontSize->setValue(qApp->font().pointSize());
 
     connect(ui->comboBox_ApplicationsLanguage, &QComboBox::currentIndexChanged, this, &ApplicationSettings::onComboBoxTextChanged);
+    connect(ui->spinBox_FontSize, &QSpinBox::valueChanged, this, &ApplicationSettings::onSpinBoxValueChanged);
 }
 
 ApplicationSettings::~ApplicationSettings()
@@ -59,4 +61,15 @@ void ApplicationSettings::onComboBoxTextChanged()
 QString ApplicationSettings::getCurrentLanguage()
 {
     return this->currentLanguage;
+}
+
+
+void ApplicationSettings::onSpinBoxValueChanged(int newValue)
+{
+    QFont font = qApp->font();
+    font.setPointSize(newValue);
+    qApp->setFont(font);
+
+    QSettings settings = QSettings("settings.ini", QSettings::IniFormat);
+    settings.setValue("ApplicationFontSize", newValue);
 }

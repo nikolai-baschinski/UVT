@@ -20,7 +20,7 @@
       <x>20</x>
       <y>390</y>
       <width>191</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -53,7 +53,7 @@
       <x>20</x>
       <y>550</y>
       <width>141</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -76,7 +76,7 @@
       <x>180</x>
       <y>550</y>
       <width>131</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -102,7 +102,7 @@
       <x>360</x>
       <y>500</y>
       <width>161</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -115,7 +115,7 @@
       <x>690</x>
       <y>500</y>
       <width>171</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -128,7 +128,7 @@
       <x>690</x>
       <y>530</y>
       <width>171</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -141,7 +141,7 @@
       <x>690</x>
       <y>560</y>
       <width>171</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -154,7 +154,7 @@
       <x>690</x>
       <y>590</y>
       <width>171</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -177,7 +177,7 @@
       <x>950</x>
       <y>60</y>
       <width>160</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">
@@ -200,7 +200,7 @@
       <x>20</x>
       <y>590</y>
       <width>141</width>
-      <height>24</height>
+      <height>28</height>
      </rect>
     </property>
     <property name="text">

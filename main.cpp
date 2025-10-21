@@ -36,6 +36,16 @@ int main(int argc, char *argv[])
         }
     }
 
+    QString strFontSize = settings.value("ApplicationFontSize").toString();
+    unsigned int intFontSize = strFontSize.toInt();
+    if (intFontSize >= 9 && intFontSize <= 12) {
+        QFont font = qApp->font();
+        font.setPointSize(intFontSize);
+        qApp->setFont(font);
+    } else {
+        settings.setValue("ApplicationFontSize", 9);
+    }
+
     MainWindow w(langauageToLoad);
     w.show();
     return app.exec();
