@@ -1,4 +1,4 @@
-#include "Lesson.h"
+#include "lesson.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
@@ -57,4 +57,20 @@ Lesson::Lesson(QString absoluteFilePath) {
     }
 
     file.close();
+
+    this->updateCheckString();
+}
+
+void Lesson::updateCheckString()
+{
+    this->checkString = "";
+    for (int i = 0; i< this->words.count(); i++) {
+        const Word& word = this->words.at(i);
+        this->checkString += word.foreign;
+
+        for (int j = 0; j < word.natives.count(); j++) {
+            this->checkString += word.natives.at(j).native;
+            this->checkString += word.natives.at(j).example;
+        }
+    }
 }

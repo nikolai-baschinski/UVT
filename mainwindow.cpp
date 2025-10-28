@@ -15,7 +15,6 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
     connect(ui->pushButton_CreateNewLesson, &QPushButton::clicked, this, &MainWindow::pushButton_CreateNewLesson);
     connect(ui->pushButton_AddFolder, &QPushButton::clicked, this, &MainWindow::pushButton_AddFolder);
     connect(ui->pushButton_UpdateLessensView, &QPushButton::clicked, this, &MainWindow::pushButton_UpdateLessensView);
@@ -65,10 +64,13 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     font.setBold(true);
     this->ui->tableWidget->horizontalHeader()->setFont(font);
 
-    QString lastLesson = this->settings->value("LastLesson").toString();
+    QString lastLessonPath = this->settings->value("LastLesson").toString();
     for (int i = 0; i < this->lessons.count(); i++) {
-        if (this->lessons.at(i)->path == lastLesson) {
-            ui->listWidget->setCurrentRow(i);
+        const Lesson* pLesson = this->lessons.at(i);
+        if (pLesson->path == lastLessonPath) {
+            this->ui->listWidget->setCurrentRow(i);
+            this->fillTable(pLesson);
+            this->selectedRowMemory = i;
             break;
         }
     }
@@ -80,6 +82,8 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     ui->tableWidget->resizeColumnsToContents();
     ui->listWidget->setFocus();
     ui->plainTextEdit_SearchResults->setReadOnly(true);
+
+    connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
 }
 
 MainWindow::~MainWindow()
@@ -125,7 +129,7 @@ void MainWindow::pushButton_CreateNewLesson()
     }
 }
 
-void MainWindow::fillTable(Lesson* pLesson)
+void MainWindow::fillTable(const Lesson* pLesson)
 {
     disconnect(ui->tableWidget, &QTableWidget::cellChanged, this, &MainWindow::onCellContentChanged);
 
@@ -160,11 +164,15 @@ void MainWindow::fillTable(Lesson* pLesson)
         }
     }
 
+    this->checkStringMemory = pLesson->checkString;
+
     connect(ui->tableWidget, &QTableWidget::cellChanged, this, &MainWindow::onCellContentChanged);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    this->checkForChanges();
+
     QListWidgetItem *currentItem = ui->listWidget->currentItem();
     if (currentItem) {
         settings->setValue("LastLesson", currentItem->toolTip() + "/" + currentItem->text() + ".txt");
@@ -209,9 +217,12 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::listWidget_itemSelectionChanged()
 {
+    this->checkForChanges();
+
     int row = this->ui->listWidget->currentRow();
     if(this->lessons.count() > 0 && row >= 0) {
         this->fillTable(this->lessons.at(row));
+        this->selectedRowMemory = row;
     }
 
     // add 10 new rows to new lessons
@@ -309,6 +320,7 @@ void MainWindow::pushButton_UpdateLessensView()
 
 void MainWindow::pushButton_TestLesson()
 {
+    this->checkForChanges();
     int row = this->ui->listWidget->currentRow();
     if(row >= 0) {
         Test_Configuration tstConfig(this->lessons[row], this);
@@ -320,118 +332,8 @@ void MainWindow::pushButton_TestLesson()
 
 void MainWindow::pushButton_Save()
 {
-    // Input check
-    unsigned int numbRows = this->ui->tableWidget->rowCount();
-    QString text_nx_c0;
-    QString text_nx_c1;
-    QString text_nx_c2;
-    for(int i = 0; i < numbRows; i++) {
-        text_nx_c0 = this->ui->tableWidget->item(i, 0)->text();
-        text_nx_c1 = this->ui->tableWidget->item(i, 1)->text();
-        text_nx_c2 = this->ui->tableWidget->item(i, 2)->text();
-        if(text_nx_c0.isEmpty() && text_nx_c1.isEmpty() && !text_nx_c2.isEmpty()) {
-            QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
-            return;
-        }
-
-        if(!text_nx_c0.isEmpty() && text_nx_c1.isEmpty()) {
-            QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
-            return;
-        }
-
-        if(text_nx_c0.isEmpty() && !text_nx_c1.isEmpty()) {
-            int counter = i;
-            QString text_rx_c0;
-            QString text_rx_c1;
-            while(counter > 0) {
-                text_rx_c0 = this->ui->tableWidget->item(counter-1, 0)->text();
-                text_rx_c1 = this->ui->tableWidget->item(counter-1, 1)->text();
-                if(text_rx_c0.isEmpty() && text_rx_c1.isEmpty()) {
-                    QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
-                    return;
-                }
-                if(!text_rx_c0.isEmpty() && !text_rx_c1.isEmpty()) {
-                    break;
-                }
-                if(text_rx_c0.isEmpty() && !text_rx_c1.isEmpty()) {
-                    counter--;
-                }
-            }
-
-            if(counter == 0) {
-                QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
-                return;
-            }
-        }
-    }
-
-    QListWidgetItem* pListItem = this->ui->listWidget->currentItem();
-    if(pListItem == nullptr) {
-        return;
-    }
-    QString lessonName = pListItem->text();
-    QString fileName = pListItem->toolTip() + "/" + lessonName + ".txt";
-    QFile file(fileName);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-        out << lessonName << "\n\n";
-
-        unsigned int longest_C0 = 0;
-        unsigned int longest_C1 = 0;
-
-        // Search for the longest word
-        for(int i = 0; i < numbRows; i++) {
-            text_nx_c0 = this->ui->tableWidget->item(i, 0)->text();
-            if(text_nx_c0.length() > longest_C0) {
-                longest_C0 = text_nx_c0.length();
-            }
-            text_nx_c1 = this->ui->tableWidget->item(i, 1)->text();
-            if(text_nx_c1.length() > longest_C1) {
-                longest_C1 = text_nx_c1.length();
-            }
-        }
-
-        unsigned int tabs_C0 = longest_C0/4+1;
-        unsigned int tabs_C1 = longest_C1/4+1;
-
-        unsigned int tab_loops = 0;
-        for(int i = 0; i < numbRows; i++) {
-            text_nx_c0 = this->ui->tableWidget->item(i, 0)->text();
-            text_nx_c1 = this->ui->tableWidget->item(i, 1)->text();
-            text_nx_c2 = this->ui->tableWidget->item(i, 2)->text();
-
-            // Skip empty rows
-            if(text_nx_c0.isEmpty() && text_nx_c1.isEmpty() && text_nx_c2.isEmpty()) {
-                continue;
-            }
-
-            out << text_nx_c0;
-            tab_loops = tabs_C0 - text_nx_c0.length() / 4;
-            for(int j = 0; j < tab_loops; j ++) {
-                out << '\t';
-            }
-
-            out << text_nx_c1;
-            tab_loops = tabs_C1 - text_nx_c1.length() / 4;
-            for(int j = 0; j < tab_loops; j ++) {
-                out << '\t';
-            }
-
-            out << this->ui->tableWidget->item(i, 2)->text() << '\n';
-        }
-        file.close();
-
-        int row = this->ui->listWidget->currentRow();
-        if(this->lessons[row] != nullptr) {
-            delete this->lessons[row];
-            Lesson* pNewLesson = new Lesson(fileName);
-            this->lessons[row] = pNewLesson;
-            this->fillTable(this->lessons.at(row));
-        }
-
-    } else {
-        QMessageBox::information(this, tr("Info"), "An error occured while saving.");
-    }
+    this->checkInputCorrectness();
+    this->writeLessonToFile(this->ui->listWidget->currentRow());
 }
 
 void MainWindow::pushButton_AddRowBelow()
@@ -478,7 +380,7 @@ void MainWindow::hideSelectedLesson()
 
 void MainWindow::showSelectedLesson()
 {
-    this->listWidget_itemSelectionChanged();
+    this->fillTable(this->lessons.at(this->ui->listWidget->currentRow()));
 }
 
 void MainWindow::pushButton_Search()
@@ -577,6 +479,153 @@ void MainWindow::onCellContentChanged(int row, int column)
             if(word.foreign == newValue) {
                 QString info = tr("This word exists in lesson\n") + pLesson->path;
                 QMessageBox::information(this, tr("Info"), info);
+            }
+        }
+    }
+}
+
+void MainWindow::saveLesson()
+{
+    this->checkInputCorrectness();
+    this->writeLessonToFile(this->selectedRowMemory);
+}
+
+void MainWindow::checkInputCorrectness()
+{
+    unsigned int numbRows = this->ui->tableWidget->rowCount();
+    QString text_nx_c0;
+    QString text_nx_c1;
+    QString text_nx_c2;
+    for(int i = 0; i < numbRows; i++) {
+        text_nx_c0 = this->ui->tableWidget->item(i, 0)->text();
+        text_nx_c1 = this->ui->tableWidget->item(i, 1)->text();
+        text_nx_c2 = this->ui->tableWidget->item(i, 2)->text();
+        if(text_nx_c0.isEmpty() && text_nx_c1.isEmpty() && !text_nx_c2.isEmpty()) {
+            QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
+            return;
+        }
+
+        if(!text_nx_c0.isEmpty() && text_nx_c1.isEmpty()) {
+            QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
+            return;
+        }
+
+        if(text_nx_c0.isEmpty() && !text_nx_c1.isEmpty()) {
+            int counter = i;
+            QString text_rx_c0;
+            QString text_rx_c1;
+            while(counter > 0) {
+                text_rx_c0 = this->ui->tableWidget->item(counter-1, 0)->text();
+                text_rx_c1 = this->ui->tableWidget->item(counter-1, 1)->text();
+                if(text_rx_c0.isEmpty() && text_rx_c1.isEmpty()) {
+                    QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
+                    return;
+                }
+                if(!text_rx_c0.isEmpty() && !text_rx_c1.isEmpty()) {
+                    break;
+                }
+                if(text_rx_c0.isEmpty() && !text_rx_c1.isEmpty()) {
+                    counter--;
+                }
+            }
+
+            if(counter == 0) {
+                QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
+                return;
+            }
+        }
+    }
+}
+
+void MainWindow::writeLessonToFile(int row)
+{
+    QString absFilePath = this->lessons.at(row)->path;
+    QFile file(absFilePath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << QFileInfo(absFilePath).completeBaseName() << "\n\n";
+
+        unsigned int longest_C0 = 0;
+        unsigned int longest_C1 = 0;
+        unsigned int numbRows = this->ui->tableWidget->rowCount();
+        QString text_nx_c0;
+        QString text_nx_c1;
+        QString text_nx_c2;
+
+        // Search for the longest word
+        for(int i = 0; i < numbRows; i++) {
+            text_nx_c0 = this->ui->tableWidget->item(i, 0)->text();
+            if(text_nx_c0.length() > longest_C0) {
+                longest_C0 = text_nx_c0.length();
+            }
+            text_nx_c1 = this->ui->tableWidget->item(i, 1)->text();
+            if(text_nx_c1.length() > longest_C1) {
+                longest_C1 = text_nx_c1.length();
+            }
+        }
+
+        unsigned int tabs_C0 = longest_C0/4+1;
+        unsigned int tabs_C1 = longest_C1/4+1;
+
+        unsigned int tab_loops = 0;
+        for(int i = 0; i < numbRows; i++) {
+            text_nx_c0 = this->ui->tableWidget->item(i, 0)->text();
+            text_nx_c1 = this->ui->tableWidget->item(i, 1)->text();
+            text_nx_c2 = this->ui->tableWidget->item(i, 2)->text();
+
+            // Skip empty rows
+            if(text_nx_c0.isEmpty() && text_nx_c1.isEmpty() && text_nx_c2.isEmpty()) {
+                continue;
+            }
+
+            out << text_nx_c0;
+            tab_loops = tabs_C0 - text_nx_c0.length() / 4;
+            for(int j = 0; j < tab_loops; j ++) {
+                out << '\t';
+            }
+
+            out << text_nx_c1;
+            tab_loops = tabs_C1 - text_nx_c1.length() / 4;
+            for(int j = 0; j < tab_loops; j ++) {
+                out << '\t';
+            }
+
+            out << this->ui->tableWidget->item(i, 2)->text() << '\n';
+        }
+        file.close();
+
+        if(this->lessons[row] != nullptr) {
+            delete this->lessons[row];
+            Lesson* pNewLesson = new Lesson(absFilePath);
+            this->lessons[row] = pNewLesson;
+            this->fillTable(this->lessons.at(row));
+        }
+
+    } else {
+        QMessageBox::information(this, tr("Info"), "An error occured while saving.");
+    }
+}
+
+void MainWindow::checkForChanges()
+{
+    QString currentCheckString;
+
+    int rows = ui->tableWidget->rowCount();
+    int cols = ui->tableWidget->columnCount();
+
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            currentCheckString += ui->tableWidget->item(r, c)->text();
+        }
+    }
+
+    int row = this->ui->listWidget->currentRow();
+
+    if(this->lessons.count() > 0 && row >= 0) {
+        if(this->checkStringMemory != currentCheckString) {
+            QMessageBox::StandardButton reply = QMessageBox::information(this, "Info", "Changes pending. Save?", QMessageBox::Yes | QMessageBox::No);
+            if (reply == QMessageBox::Yes) {
+                this->saveLesson();
             }
         }
     }

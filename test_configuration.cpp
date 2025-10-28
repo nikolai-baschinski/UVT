@@ -7,7 +7,7 @@
 constexpr const char* NATIVE = "Native";
 constexpr const char* FOREIGN = "Foreign";
 
-Test_Configuration::Test_Configuration(Lesson* pLesson, MainWindow* pParent)
+Test_Configuration::Test_Configuration(const Lesson* pLesson, MainWindow* pParent)
     : QDialog(pParent)
     , ui(new Ui::Test_Configuration)
 {

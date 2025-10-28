@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QTextCursor>
 #include "test_settings.h"
-#include "Lesson.h"
+#include "lesson.h"
 #include "mainwindow.h"
 
 
@@ -19,7 +19,7 @@ class Test : public QDialog
     Q_OBJECT
 
 public:
-    explicit Test(Test_Settings& settings, Lesson* pLesson, MainWindow* pParent = nullptr);
+    explicit Test(Test_Settings& settings, const Lesson* pLesson, MainWindow* pParent = nullptr);
     ~Test();
 
 private slots:

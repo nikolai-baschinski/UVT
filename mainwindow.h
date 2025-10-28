@@ -9,7 +9,7 @@
 #include <QDir>
 #include <QApplication>
 
-#include "Lesson.h"
+#include "lesson.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -48,7 +48,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    void fillTable(Lesson* pLesson);
+    void fillTable(const Lesson* pLesson);
     QVector<Lesson*> lessons;
     void closeEvent(QCloseEvent *event);
     QSettings* settings;
@@ -57,5 +57,11 @@ private:
     QString foreignString;
     QString nativeString;
     QLocale applicationLocale;
+    QString checkStringMemory;
+    int selectedRowMemory;
+    void saveLesson();
+    void checkInputCorrectness();
+    void writeLessonToFile(int lessonRow);
+    void checkForChanges();
 };
 #endif // MAINWINDOW_H

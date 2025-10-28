@@ -6,7 +6,7 @@
 #include <QTimer>
 #include <QMessageBox>
 
-Test::Test(Test_Settings& settings, Lesson* pLesson, MainWindow* pParent)
+Test::Test(Test_Settings& settings, const Lesson* pLesson, MainWindow* pParent)
     : QDialog(pParent)
     , ui(new Ui::Test)
 {

@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QSettings>
 #include "mainwindow.h"
-#include "Lesson.h"
+#include "lesson.h"
 
 namespace Ui {
 class Test_Configuration;
@@ -15,7 +15,7 @@ class Test_Configuration : public QDialog
     Q_OBJECT
 
 public:
-    explicit Test_Configuration(Lesson* pLesson, MainWindow* pParent = nullptr);
+    explicit Test_Configuration(const Lesson* pLesson, MainWindow* pParent = nullptr);
     ~Test_Configuration();
 
 private slots:
@@ -25,7 +25,7 @@ private slots:
 private:
     Ui::Test_Configuration *ui;
     MainWindow* pMainWindow;
-    Lesson* pLesson;
+    const Lesson* pLesson;
     QSettings* settings;
 };
 
