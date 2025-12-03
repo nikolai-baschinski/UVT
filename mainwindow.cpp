@@ -79,6 +79,7 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
 
     if (ui->listWidget->count() > 0 && ui->listWidget->currentRow() == -1) {
         ui->listWidget->setCurrentRow(0);
+        this->fillTable(this->lessons.at(0));
     }
 
     ui->tableWidget->resizeColumnsToContents();
@@ -91,7 +92,6 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
         ui->lineEdit_SearchString->setFocus();
         ui->lineEdit_SearchString->selectAll();
     });
-
 }
 
 MainWindow::~MainWindow()
@@ -175,9 +175,8 @@ void MainWindow::fillTable(const Lesson* pLesson)
             rowIndex++;
         }
     }
-
+    this->pushButton_AddRowBelow();
     this->checkStringMemory = pLesson->checkString;
-
     connect(ui->tableWidget, &QTableWidget::cellChanged, this, &MainWindow::onCellContentChanged);
 }
 
