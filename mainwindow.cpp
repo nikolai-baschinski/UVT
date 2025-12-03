@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QKeyEvent>
 #include <QFileDialog>
+#include <QShortcut>
 #include "test_configuration.h"
 #include "applicationsettings.h"
 
@@ -84,10 +85,19 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     ui->listWidget->setFocus();
 
     connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
+
+    this->shortcutF3 = new QShortcut(QKeySequence(Qt::Key_F3), this);
+    connect(shortcutF3, &QShortcut::activated, this, [this]() {
+        ui->lineEdit_SearchString->setFocus();
+        ui->lineEdit_SearchString->selectAll();
+    });
+
 }
 
 MainWindow::~MainWindow()
 {
+    if(this->shortcutF3)
+        delete this->shortcutF3;
     delete ui;
 }
 
