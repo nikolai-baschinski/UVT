@@ -150,8 +150,10 @@ void MainWindow::fillTable(const Lesson* pLesson)
             // Column 0: Word
             if (n == 0) {
                 ui->tableWidget->setItem(rowIndex, 0, new QTableWidgetItem(word.foreign));
+                ui->tableWidget->setVerticalHeaderItem(rowIndex, new QTableWidgetItem(QString::number(i+1)));
             } else {
                 ui->tableWidget->setItem(rowIndex, 0, new QTableWidgetItem(""));
+                ui->tableWidget->setVerticalHeaderItem(rowIndex, new QTableWidgetItem(""));
             }
 
             // Column 1: Translation
