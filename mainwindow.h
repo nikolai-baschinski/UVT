@@ -45,6 +45,7 @@ private slots:
     void pushButton_Search();
     void pushButton_ApplicationSettings();
     void onCellContentChanged(int row, int column);
+    void listWidget_SearchResults_itemSelectionChanged();
 
 private:
     Ui::MainWindow *ui;
@@ -59,8 +60,7 @@ private:
     QLocale applicationLocale;
     QString checkStringMemory;
     int selectedRowMemory;
-    void saveLesson();
-    void checkInputCorrectness();
+    bool checkInputCorrectness();
     void writeLessonToFile(int lessonRow);
     void checkForChanges();
 };

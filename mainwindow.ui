@@ -184,16 +184,6 @@
      <string>Search</string>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="plainTextEdit_SearchResults">
-    <property name="geometry">
-     <rect>
-      <x>950</x>
-      <y>100</y>
-      <width>411</width>
-      <height>391</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_ApplicationSettings">
     <property name="geometry">
      <rect>
@@ -205,6 +195,16 @@
     </property>
     <property name="text">
      <string>Settings</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget_SearchResults">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>100</y>
+      <width>411</width>
+      <height>521</height>
+     </rect>
     </property>
    </widget>
   </widget>

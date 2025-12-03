@@ -27,6 +27,7 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     connect(ui->pushButton_Search, &QPushButton::clicked, this, &MainWindow::pushButton_Search);
     connect(ui->lineEdit_SearchString, &QLineEdit::returnPressed, this, &MainWindow::pushButton_Search);
     connect(ui->pushButton_ApplicationSettings, &QPushButton::clicked, this, &MainWindow::pushButton_ApplicationSettings);
+    connect(ui->listWidget_SearchResults, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_SearchResults_itemSelectionChanged);
 
     this->ui->listWidget->installEventFilter(this);
     this->ui->lineEdit_SearchString->installEventFilter(this);
@@ -81,7 +82,6 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
 
     ui->tableWidget->resizeColumnsToContents();
     ui->listWidget->setFocus();
-    ui->plainTextEdit_SearchResults->setReadOnly(true);
 
     connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
 }
@@ -334,8 +334,9 @@ void MainWindow::pushButton_TestLesson()
 
 void MainWindow::pushButton_Save()
 {
-    this->checkInputCorrectness();
-    this->writeLessonToFile(this->ui->listWidget->currentRow());
+    if(this->checkInputCorrectness()) {
+        this->writeLessonToFile(this->ui->listWidget->currentRow());
+    }
 }
 
 void MainWindow::pushButton_AddRowBelow()
@@ -390,11 +391,11 @@ void MainWindow::showSelectedLesson()
 
 void MainWindow::pushButton_Search()
 {
-    this->ui->plainTextEdit_SearchResults->clear();
+    this->ui->listWidget_SearchResults->clear();
 
     QString ss = this->ui->lineEdit_SearchString->text();
     if(ss.length() < 3 ) {
-        this->ui->plainTextEdit_SearchResults->setPlainText(tr("Please enter at least three letters for the search text."));
+        this->ui->listWidget_SearchResults->addItem(tr("Please enter at least three letters for the search text."));
         return;
     }
 
@@ -420,12 +421,12 @@ void MainWindow::pushButton_Search()
                     result.append(word.natives.at(n).native + "  " + word.natives.at(n).example + '\n');
                 }
                 result.append('\n');
-                this->ui->plainTextEdit_SearchResults->appendPlainText(result);
+                this->ui->listWidget_SearchResults->addItem(result);
             }
         }
     }
-    if(this->ui->plainTextEdit_SearchResults->toPlainText() == ""){
-        this->ui->plainTextEdit_SearchResults->setPlainText(tr("Nothing found"));
+    if(this->ui->listWidget_SearchResults->count() == 0) {
+        this->ui->listWidget_SearchResults->addItem(tr("Nothing found"));
     }
 }
 
@@ -489,13 +490,7 @@ void MainWindow::onCellContentChanged(int row, int column)
     }
 }
 
-void MainWindow::saveLesson()
-{
-    this->checkInputCorrectness();
-    this->writeLessonToFile(this->selectedRowMemory);
-}
-
-void MainWindow::checkInputCorrectness()
+bool MainWindow::checkInputCorrectness()
 {
     unsigned int numbRows = this->ui->tableWidget->rowCount();
     QString text_nx_c0;
@@ -507,12 +502,12 @@ void MainWindow::checkInputCorrectness()
         text_nx_c2 = this->ui->tableWidget->item(i, 2)->text();
         if(text_nx_c0.isEmpty() && text_nx_c1.isEmpty() && !text_nx_c2.isEmpty()) {
             QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
-            return;
+            return false;
         }
 
         if(!text_nx_c0.isEmpty() && text_nx_c1.isEmpty()) {
             QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
-            return;
+            return false;
         }
 
         if(text_nx_c0.isEmpty() && !text_nx_c1.isEmpty()) {
@@ -524,7 +519,7 @@ void MainWindow::checkInputCorrectness()
                 text_rx_c1 = this->ui->tableWidget->item(counter-1, 1)->text();
                 if(text_rx_c0.isEmpty() && text_rx_c1.isEmpty()) {
                     QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
-                    return;
+                    return false;
                 }
                 if(!text_rx_c0.isEmpty() && !text_rx_c1.isEmpty()) {
                     break;
@@ -536,10 +531,11 @@ void MainWindow::checkInputCorrectness()
 
             if(counter == 0) {
                 QMessageBox::information(this, tr("Info"), tr("Please check content in line ") + QString::number(i+1));
-                return;
+                return false;
             }
         }
     }
+    return true;
 }
 
 void MainWindow::writeLessonToFile(int row)
@@ -630,7 +626,25 @@ void MainWindow::checkForChanges()
         if(this->checkStringMemory != currentCheckString) {
             QMessageBox::StandardButton reply = QMessageBox::information(this, "Info", "Changes pending. Save?", QMessageBox::Yes | QMessageBox::No);
             if (reply == QMessageBox::Yes) {
-                this->saveLesson();
+                if(this->checkInputCorrectness()) {
+                    this->writeLessonToFile(this->selectedRowMemory);
+                }
+            }
+        }
+    }
+}
+
+void MainWindow::listWidget_SearchResults_itemSelectionChanged()
+{
+    QString text = this->ui->listWidget_SearchResults->currentItem()->text();
+    QStringList list = text.split('\n');
+    if(list.size() > 0) {
+        for(int i = 0; i < this->ui->listWidget->count(); i++) {
+            QListWidgetItem* pCurrentItem = this->ui->listWidget->item(i);
+            QString absoluteFilePath = pCurrentItem->toolTip() + "/" + pCurrentItem->text() + ".txt";
+            if(absoluteFilePath == list.at(0)) {
+                this->ui->listWidget->setCurrentRow(i);
+                break;
             }
         }
     }
