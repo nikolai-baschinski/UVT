@@ -345,6 +345,7 @@ void MainWindow::pushButton_AddRowBelow()
     ui->tableWidget->setItem(row, 0, new QTableWidgetItem(""));
     ui->tableWidget->setItem(row, 1, new QTableWidgetItem(""));
     ui->tableWidget->setItem(row, 2, new QTableWidgetItem(""));
+    ui->tableWidget->setVerticalHeaderItem(row, new QTableWidgetItem("-"));
 }
 
 void MainWindow::pushButton_InsertRowBelow()
@@ -355,6 +356,7 @@ void MainWindow::pushButton_InsertRowBelow()
         ui->tableWidget->setItem(row+1, 0, new QTableWidgetItem(""));
         ui->tableWidget->setItem(row+1, 1, new QTableWidgetItem(""));
         ui->tableWidget->setItem(row+1, 2, new QTableWidgetItem(""));
+        ui->tableWidget->setVerticalHeaderItem(row+1, new QTableWidgetItem("-"));
     }
 }
 
@@ -366,6 +368,7 @@ void MainWindow::pushButton_InsertRowAbove()
         ui->tableWidget->setItem(row, 0, new QTableWidgetItem(""));
         ui->tableWidget->setItem(row, 1, new QTableWidgetItem(""));
         ui->tableWidget->setItem(row, 2, new QTableWidgetItem(""));
+        ui->tableWidget->setVerticalHeaderItem(row, new QTableWidgetItem("-"));
     }
 }
 
