@@ -103,6 +103,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::pushButton_CreateNewLesson()
 {
+    disconnect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
+
     QString path = settings->value("NewLessonSavePath").toString();
     QString fileName = QFileDialog::getSaveFileName(this, tr("Create new lessson"), path, tr("Text Files (*.txt);;All Files (*)"), nullptr, QFileDialog::DontConfirmOverwrite);
     if (!fileName.isEmpty()) {
@@ -128,15 +130,29 @@ void MainWindow::pushButton_CreateNewLesson()
 
                 QListWidgetItem *item = new QListWidgetItem(lessonName, ui->listWidget);
                 item->setToolTip(fileInfo.absolutePath());
-                Lesson *lesson = new Lesson(fileName);
-                this->lessons.append(lesson);
+                Lesson* pLesson = new Lesson(fileName);
+                this->lessons.append(pLesson);
                 this->ui->listWidget->setCurrentRow(this->ui->listWidget->count() - 1);
                 settings->setValue("NewLessonSavePath", fileInfo.absolutePath());
+
+                // add 10 new rows to new lessons
+                ui->tableWidget->setRowCount(10);
+                for (int i = 0; i < 10; i++) {
+                    ui->tableWidget->setItem(i, 0, new QTableWidgetItem(""));
+                    ui->tableWidget->setItem(i, 1, new QTableWidgetItem(""));
+                    ui->tableWidget->setItem(i, 2, new QTableWidgetItem(""));
+                    ui->tableWidget->setVerticalHeaderItem(i, new QTableWidgetItem(QString::number(i)));
+                }
+
+                this->checkStringMemory = pLesson->checkString;
+
             } else {
                 QMessageBox::warning(this, tr("Error"), tr("Could not create file: ") + file.errorString());
             }
         }
     }
+
+    connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
 }
 
 void MainWindow::fillTable(const Lesson* pLesson)
@@ -234,17 +250,6 @@ void MainWindow::listWidget_itemSelectionChanged()
     if(this->lessons.count() > 0 && row >= 0) {
         this->fillTable(this->lessons.at(row));
         this->selectedRowMemory = row;
-    }
-
-    // add 10 new rows to new lessons
-    int rowCnt = this->ui->tableWidget->rowCount();
-    if(rowCnt == 0) {
-        ui->tableWidget->setRowCount(10);
-        for (int i = 0; i < 10; ++i) {
-            ui->tableWidget->setItem(i, 0, new QTableWidgetItem(""));
-            ui->tableWidget->setItem(i, 1, new QTableWidgetItem(""));
-            ui->tableWidget->setItem(i, 2, new QTableWidgetItem(""));
-        }
     }
 }
 
@@ -355,7 +360,7 @@ void MainWindow::pushButton_AddRowBelow()
     ui->tableWidget->setItem(row, 0, new QTableWidgetItem(""));
     ui->tableWidget->setItem(row, 1, new QTableWidgetItem(""));
     ui->tableWidget->setItem(row, 2, new QTableWidgetItem(""));
-    ui->tableWidget->setVerticalHeaderItem(row, new QTableWidgetItem("-"));
+    ui->tableWidget->setVerticalHeaderItem(row, new QTableWidgetItem(""));
 }
 
 void MainWindow::pushButton_InsertRowBelow()
@@ -366,7 +371,7 @@ void MainWindow::pushButton_InsertRowBelow()
         ui->tableWidget->setItem(row+1, 0, new QTableWidgetItem(""));
         ui->tableWidget->setItem(row+1, 1, new QTableWidgetItem(""));
         ui->tableWidget->setItem(row+1, 2, new QTableWidgetItem(""));
-        ui->tableWidget->setVerticalHeaderItem(row+1, new QTableWidgetItem("-"));
+        ui->tableWidget->setVerticalHeaderItem(row+1, new QTableWidgetItem(""));
     }
 }
 
@@ -378,7 +383,7 @@ void MainWindow::pushButton_InsertRowAbove()
         ui->tableWidget->setItem(row, 0, new QTableWidgetItem(""));
         ui->tableWidget->setItem(row, 1, new QTableWidgetItem(""));
         ui->tableWidget->setItem(row, 2, new QTableWidgetItem(""));
-        ui->tableWidget->setVerticalHeaderItem(row, new QTableWidgetItem("-"));
+        ui->tableWidget->setVerticalHeaderItem(row, new QTableWidgetItem(""));
     }
 }
 
