@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QDir>
 #include <QApplication>
+#include <QMessageBox>
 
 #include "lesson.h"
 
@@ -62,7 +63,7 @@ private:
     int selectedRowMemory;
     bool checkInputCorrectness();
     void writeLessonToFile(int lessonRow);
-    void checkForChanges();
+    QMessageBox::StandardButton checkForChanges();
     bool CtrlButtonPressed;
 };
 #endif // MAINWINDOW_H

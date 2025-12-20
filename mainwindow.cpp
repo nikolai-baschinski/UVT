@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include <QMessageBox>
 #include <QFileInfoList>
 #include <QStandardItem>
 #include <QDebug>
@@ -192,7 +191,10 @@ void MainWindow::fillTable(const Lesson* pLesson)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    this->checkForChanges();
+    if(this->checkForChanges() == QMessageBox::Cancel) {
+        event->ignore();
+        return;
+    }
 
     QListWidgetItem *currentItem = ui->listWidget->currentItem();
     if (currentItem) {
@@ -247,7 +249,12 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::listWidget_itemSelectionChanged()
 {
-    this->checkForChanges();
+    if(this->checkForChanges() == QMessageBox::Cancel) {
+        disconnect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
+        this->ui->listWidget->setCurrentRow(this->selectedRowMemory);
+        connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
+        return;
+    }
 
     int row = this->ui->listWidget->currentRow();
     if(this->lessons.count() > 0 && row >= 0) {
@@ -339,7 +346,10 @@ void MainWindow::pushButton_UpdateLessensView()
 
 void MainWindow::pushButton_TestLesson()
 {
-    this->checkForChanges();
+    if(this->checkForChanges() == QMessageBox::Cancel) {
+        return;
+    }
+
     int row = this->ui->listWidget->currentRow();
     if(row >= 0) {
         Test_Configuration tstConfig(this->lessons[row], this);
@@ -625,9 +635,10 @@ void MainWindow::writeLessonToFile(int row)
     }
 }
 
-void MainWindow::checkForChanges()
+QMessageBox::StandardButton MainWindow::checkForChanges()
 {
     QString currentCheckString;
+    QMessageBox::StandardButton reply = QMessageBox::Yes;
 
     int rows = ui->tableWidget->rowCount();
     int cols = ui->tableWidget->columnCount();
@@ -642,14 +653,16 @@ void MainWindow::checkForChanges()
 
     if(this->lessons.count() > 0 && row >= 0) {
         if(this->checkStringMemory != currentCheckString) {
-            QMessageBox::StandardButton reply = QMessageBox::information(this, "Info", "Changes pending. Save?", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::information(this, tr("Info"), tr("Changes pending. Save?"), QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
             if (reply == QMessageBox::Yes) {
                 if(this->checkInputCorrectness()) {
                     this->writeLessonToFile(this->selectedRowMemory);
+                    this->ui->pushButton_Save->setEnabled(false);
                 }
             }
         }
     }
+    return reply;
 }
 
 void MainWindow::listWidget_SearchResults_itemSelectionChanged()
