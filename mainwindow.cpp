@@ -30,9 +30,10 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     connect(ui->pushButton_ApplicationSettings, &QPushButton::clicked, this, &MainWindow::pushButton_ApplicationSettings);
     connect(ui->listWidget_SearchResults, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_SearchResults_itemSelectionChanged);
 
-    this->ui->listWidget->installEventFilter(this);
+    this->installEventFilter(this);
     this->ui->lineEdit_SearchString->installEventFilter(this);
     this->applicationLocale = paramApplicationLocale;
+    this->CtrlButtonPressed = false;
 
     this->settings = new QSettings("settings.ini", QSettings::IniFormat);
     QString foldersString = this->settings->value("Folders").toString();
@@ -86,18 +87,10 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     ui->listWidget->setFocus();
 
     connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
-
-    this->shortcutF3 = new QShortcut(QKeySequence(Qt::Key_F3), this);
-    connect(shortcutF3, &QShortcut::activated, this, [this]() {
-        ui->lineEdit_SearchString->setFocus();
-        ui->lineEdit_SearchString->selectAll();
-    });
 }
 
 MainWindow::~MainWindow()
 {
-    if(this->shortcutF3)
-        delete this->shortcutF3;
     delete ui;
 }
 
@@ -212,30 +205,39 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    if (obj == this->ui->listWidget && event->type() == QEvent::KeyPress) {
+    if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        int currentRow = this->ui->listWidget->currentRow();
-        if(keyEvent->key() == Qt::Key_Up) {
-            if(currentRow > 0) {
-                this->ui->listWidget->setCurrentRow(currentRow - 1);
-            }
-            return true;
+        if(keyEvent->key() == Qt::Key_F3) {
+            ui->lineEdit_SearchString->setFocus();
+            ui->lineEdit_SearchString->selectAll();
         }
 
-        if(keyEvent->key() == Qt::Key_Down) {
-            if(currentRow < this->ui->listWidget->count() - 1) {
-                this->ui->listWidget->setCurrentRow(currentRow + 1);
-            }
+        if(keyEvent->key() == Qt::Key_Control) {
+            this->CtrlButtonPressed = true;
+        }
+
+        if(keyEvent->key() == Qt::Key_S && this->CtrlButtonPressed) {
+            this->CtrlButtonPressed = false;
+            this->ui->tableWidget->setFocus(); // exit edit-mode, otherwise there is a check content error
+            this->pushButton_Save();
+        }
+        if(keyEvent->key() == Qt::Key_F && this->CtrlButtonPressed) {
+            this->CtrlButtonPressed = false;
+            ui->lineEdit_SearchString->setFocus();
+            ui->lineEdit_SearchString->selectAll();
+        }
+
+        if (obj == this->ui->lineEdit_SearchString && keyEvent->key() == Qt::Key_Tab) {
+            this->ui->pushButton_Search->setDefault(true);
+            this->ui->pushButton_Search->setFocus();
             return true;
         }
     }
 
-    if ((obj == this->ui->lineEdit_SearchString) && event->type() == QEvent::KeyPress) {
+    if (event->type() == QEvent::KeyRelease) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if(keyEvent->key() == Qt::Key_Tab) {
-            this->ui->pushButton_Search->setDefault(true);
-            this->ui->pushButton_Search->setFocus();
-            return true;
+        if(keyEvent->key() == Qt::Key_Control && this->CtrlButtonPressed == true) {
+            this->CtrlButtonPressed = false;
         }
     }
 
@@ -434,7 +436,6 @@ void MainWindow::pushButton_Search()
                 for(int n = 0; n < word.natives.count(); n++) {
                     result.append(word.natives.at(n).native + "  " + word.natives.at(n).example + '\n');
                 }
-                result.append('\n');
                 this->ui->listWidget_SearchResults->addItem(result);
             }
         }

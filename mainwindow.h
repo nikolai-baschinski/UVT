@@ -63,6 +63,6 @@ private:
     bool checkInputCorrectness();
     void writeLessonToFile(int lessonRow);
     void checkForChanges();
-    QShortcut* shortcutF3;
+    bool CtrlButtonPressed;
 };
 #endif // MAINWINDOW_H
