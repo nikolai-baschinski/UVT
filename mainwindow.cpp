@@ -85,6 +85,7 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
 
     ui->tableWidget->resizeColumnsToContents();
     ui->listWidget->setFocus();
+    this->ui->pushButton_Save->setEnabled(false);
 
     connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
 }
@@ -352,6 +353,7 @@ void MainWindow::pushButton_Save()
 {
     if(this->checkInputCorrectness()) {
         this->writeLessonToFile(this->ui->listWidget->currentRow());
+        this->ui->pushButton_Save->setEnabled(false);
     }
 }
 
@@ -486,6 +488,7 @@ const QVector<Lesson*>& MainWindow::getLessons() const {
 
 void MainWindow::onCellContentChanged(int row, int column)
 {
+    this->ui->pushButton_Save->setEnabled(true);
     QString newValue = ui->tableWidget->item(row, column)->text();
     if(newValue.length() < 3) {
         return;
