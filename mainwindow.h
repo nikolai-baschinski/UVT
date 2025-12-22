@@ -65,5 +65,6 @@ private:
     void writeLessonToFile(int lessonRow);
     QMessageBox::StandardButton checkForChanges();
     bool CtrlButtonPressed;
+    void resizeEvent(QResizeEvent* event);
 };
 #endif // MAINWINDOW_H

@@ -41,9 +41,6 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     this->nativeString = this->settings->value("NativeLabel").toString();
     if(this->nativeString.isEmpty()) this->nativeString = "German";
 
-    // Layout
-    // TODO
-
     ui->listWidget->clear();
 
     QStringList folders = foldersString.split('\n', Qt::SkipEmptyParts);
@@ -92,6 +89,21 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::resizeEvent(QResizeEvent* /* event*/)
+{
+    int extraWidth =this->width() - 1377;
+    if(extraWidth > 0) {
+        QRect rect = this->ui->lineEdit_SearchString->geometry();
+        this->ui->lineEdit_SearchString->setGeometry(this->width()-rect.width()-16, rect.y(), rect.width(), rect.height());
+        rect = this->ui->pushButton_Search->geometry();
+        this->ui->pushButton_Search->setGeometry(this->width()-rect.width()-287, rect.y(), rect.width(), rect.height());
+        rect = this->ui->listWidget_SearchResults->geometry();
+        this->ui->listWidget_SearchResults->setGeometry(this->width()-rect.width()-16, rect.y(), rect.width(), rect.height());
+        rect = this->ui->tableWidget->geometry();
+        this->ui->tableWidget->setGeometry(rect.x(), rect.y(), 561+extraWidth, rect.height());
+    }
 }
 
 void MainWindow::pushButton_CreateNewLesson()
