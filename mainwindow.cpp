@@ -431,9 +431,10 @@ void MainWindow::showSelectedLesson()
 
 void MainWindow::pushButton_Search()
 {
+    disconnect(ui->listWidget_SearchResults, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_SearchResults_itemSelectionChanged);
     this->ui->listWidget_SearchResults->clear();
 
-    QString ss = this->ui->lineEdit_SearchString->text();
+    QString ss = this->ui->lineEdit_SearchString->text().trimmed();
     if(ss.length() < 3 ) {
         this->ui->listWidget_SearchResults->addItem(tr("Please enter at least three letters for the search text."));
         return;
@@ -467,6 +468,7 @@ void MainWindow::pushButton_Search()
     if(this->ui->listWidget_SearchResults->count() == 0) {
         this->ui->listWidget_SearchResults->addItem(tr("Nothing found"));
     }
+    connect(ui->listWidget_SearchResults, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_SearchResults_itemSelectionChanged);
 }
 
 void MainWindow::pushButton_ApplicationSettings()
@@ -510,21 +512,23 @@ const QVector<Lesson*>& MainWindow::getLessons() const {
 
 void MainWindow::onCellContentChanged(int row, int column)
 {
-    this->ui->pushButton_Save->setEnabled(true);
-    QString newValue = ui->tableWidget->item(row, column)->text();
-    if(newValue.length() < 3) {
-        return;
-    }
+    if(column == 0) {
+        this->ui->pushButton_Save->setEnabled(true);
+        QString newValue = ui->tableWidget->item(row, column)->text();
+        if(newValue.length() < 3) {
+            return;
+        }
 
-    // Inform the user if the word allready exsists
-    const Lesson* pLesson;
-    for(unsigned int i = 0; i < lessons.count(); i++) {
-        pLesson = lessons.at(i);
-        for(unsigned int j = 0; j < pLesson->words.count(); j++) {
-            const Word& word = pLesson->words.at(j);
-            if(word.foreign == newValue) {
-                QString info = tr("This word exists in lesson\n") + pLesson->path;
-                QMessageBox::information(this, tr("Info"), info);
+        // Inform the user if the word allready exsists
+        const Lesson* pLesson;
+        for(unsigned int i = 0; i < lessons.count(); i++) {
+            pLesson = lessons.at(i);
+            for(unsigned int j = 0; j < pLesson->words.count(); j++) {
+                const Word& word = pLesson->words.at(j);
+                if(word.foreign == newValue) {
+                    QString info = tr("This word exists in lesson\n") + pLesson->path;
+                    QMessageBox::information(this, tr("Info"), info);
+                }
             }
         }
     }
@@ -610,9 +614,9 @@ void MainWindow::writeLessonToFile(int row)
 
         unsigned int tab_loops = 0;
         for(int i = 0; i < numbRows; i++) {
-            text_nx_c0 = this->ui->tableWidget->item(i, 0)->text();
-            text_nx_c1 = this->ui->tableWidget->item(i, 1)->text();
-            text_nx_c2 = this->ui->tableWidget->item(i, 2)->text();
+            text_nx_c0 = this->ui->tableWidget->item(i, 0)->text().trimmed();
+            text_nx_c1 = this->ui->tableWidget->item(i, 1)->text().trimmed();
+            text_nx_c2 = this->ui->tableWidget->item(i, 2)->text().trimmed();
 
             // Skip empty rows
             if(text_nx_c0.isEmpty() && text_nx_c1.isEmpty() && text_nx_c2.isEmpty()) {

@@ -193,6 +193,11 @@ void Test::pushButton_GoOn()
         }
     }
 
+    this->ui->pushButton_GoOn->setEnabled(false);
+    // this is to prevent focusing the this->ui->textEdit_NativeLang, because when
+    // disabling this->ui->pushButton_GoOn, it loses the focus
+    // and the focus is obtained by this->ui->textEdit_NativeLang
+    this->ui->label_NumberTranslations->setFocus();
 
     this->timer->start(this->delay);
 }
@@ -208,6 +213,7 @@ void Test::onTimer()
         this->close();
     } else {
         this->displayWord();
+        this->ui->pushButton_GoOn->setEnabled(true);
     }
 }
 
