@@ -416,6 +416,7 @@ void MainWindow::pushButton_InsertRowAbove()
 void MainWindow::pushButton_RemoveRow()
 {
     this->ui->tableWidget->removeRow(ui->tableWidget->currentRow());
+    this->ui->pushButton_Save->setEnabled(true);
 }
 
 void MainWindow::hideSelectedLesson()
@@ -512,8 +513,8 @@ const QVector<Lesson*>& MainWindow::getLessons() const {
 
 void MainWindow::onCellContentChanged(int row, int column)
 {
+    this->ui->pushButton_Save->setEnabled(true);
     if(column == 0) {
-        this->ui->pushButton_Save->setEnabled(true);
         QString newValue = ui->tableWidget->item(row, column)->text();
         if(newValue.length() < 3) {
             return;
