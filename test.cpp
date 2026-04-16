@@ -31,6 +31,7 @@ Test::Test(Test_Settings& settings, const Lesson* pLesson, MainWindow* pParent)
     this->ui->label_Status->setText(tr("Tested: ") + QString::number(this->valueWordsToTest - this->words.count()) + tr(" out of ") + QString::number(this->valueWordsToTest));
     this->ui->lineEdit_ForeignLang->installEventFilter(this);
     this->ui->textEdit_NativeLang->installEventFilter(this);
+    this->ui->pushButton_GoOn->installEventFilter(this);
     this->ui->label_ForeignLang->setText(this->pMainWindow->getForeignString());
     this->ui->label_NativeLang->setText(this->pMainWindow->getNativeString());
     QFileInfo fileInfo (pLesson->path);
@@ -114,7 +115,6 @@ void Test::pushButton_StopTest()
 
 void Test::pushButton_GoOn()
 {
-    this->ui->pushButton_GoOn->setDefault(false);
     QTextCursor cursor(this->ui->textEdit_NativeLang->textCursor());
     QTextCharFormat redFormat;
     QTextCharFormat greenFormat;
@@ -222,11 +222,27 @@ bool Test::eventFilter(QObject *obj, QEvent *event)
     if ((obj == this->ui->lineEdit_ForeignLang || obj == this->ui->textEdit_NativeLang) && event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if(keyEvent->key() == Qt::Key_Tab) {
-            this->ui->pushButton_GoOn->setDefault(true);
             this->ui->pushButton_GoOn->setFocus();
             return true;
         }
     }
+
+    if(this->questionLangCurrent == Language::Native && obj == this->ui->pushButton_GoOn && event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if(keyEvent->key() == Qt::Key_Tab) {
+            this->ui->textEdit_NativeLang->setFocus();
+            return true;
+        }
+    }
+
+    if(this->questionLangCurrent == Language::Foreign && obj == this->ui->pushButton_GoOn && event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if(keyEvent->key() == Qt::Key_Tab) {
+            this->ui->lineEdit_ForeignLang->setFocus();
+            return true;
+        }
+    }
+
     return QObject::eventFilter(obj, event);
 }
 
