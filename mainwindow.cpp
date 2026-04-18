@@ -82,6 +82,7 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
     ui->tableWidget->resizeColumnsToContents();
     ui->listWidget->setFocus();
     this->ui->pushButton_Save->setEnabled(false);
+    this->ui->radioButton_Both->setChecked(true);
 
     connect(ui->listWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::listWidget_itemSelectionChanged);
 }
@@ -103,6 +104,18 @@ void MainWindow::resizeEvent(QResizeEvent* /* event*/)
         this->ui->listWidget_SearchResults->setGeometry(this->width()-rect.width()-16, rect.y(), rect.width(), rect.height());
         rect = this->ui->tableWidget->geometry();
         this->ui->tableWidget->setGeometry(rect.x(), rect.y(), 561+extraWidth, rect.height());
+        rect = this->ui->radioButton_Foreign->geometry();
+        this->ui->radioButton_Foreign->setGeometry(this->width()-rect.width()-287, rect.y(), rect.width(), rect.height());
+        rect = this->ui->radioButton_Native->geometry();
+        this->ui->radioButton_Native->setGeometry(this->width()-rect.width()-287, rect.y(), rect.width(), rect.height());
+        rect = this->ui->radioButton_Both->geometry();
+        this->ui->radioButton_Both->setGeometry(this->width()-rect.width()-287, rect.y(), rect.width(), rect.height());
+        rect = this->ui->checkBox_Match_Case->geometry();
+        this->ui->checkBox_Match_Case->setGeometry(this->width()-rect.width()-27, rect.y(), rect.width(), rect.height());
+        rect = this->ui->checkBox_Match_Whole->geometry();
+        this->ui->checkBox_Match_Whole->setGeometry(this->width()-rect.width()-27, rect.y(), rect.width(), rect.height());
+        rect = this->ui->checkBox_Search_Example->geometry();
+        this->ui->checkBox_Search_Example->setGeometry(this->width()-rect.width()-27, rect.y(), rect.width(), rect.height());
     }
 }
 
@@ -448,14 +461,80 @@ void MainWindow::pushButton_Search()
         for(int j = 0; j < pLesson->words.count(); j++) {
             const Word &word = pLesson->words.at(j);
             bool foundFlag = false;
-            if(word.foreign.contains(ss)) {
-                foundFlag = true;
-            }
-            for(int n = 0; n < word.natives.count(); n++) {
-                if(word.natives.at(n).native.contains(ss)) {
-                    foundFlag = true;
+
+            if(this->ui->radioButton_Foreign->isChecked() || this->ui->radioButton_Both->isChecked()) {
+
+                if(this->ui->checkBox_Match_Case->isChecked()) {
+                    if(this->ui->checkBox_Match_Whole->isChecked()) {
+                        if(word.foreign == ss) {
+                            foundFlag = true;
+                        }
+                    } else {
+                        if(word.foreign.contains(ss)) {
+                            foundFlag = true;
+                        }
+                    }
+                } else {
+                    QString foreign_lowered = word.foreign.toLower();
+                    QString ss_lowered = ss.toLower();
+                    if(this->ui->checkBox_Match_Whole->isChecked()) {
+                        if(foreign_lowered == ss_lowered) {
+                            foundFlag = true;
+                        }
+                    } else {
+                        if(foreign_lowered.contains(ss_lowered)) {
+                            foundFlag = true;
+                        }
+                    }
                 }
             }
+
+            if(this->ui->radioButton_Native->isChecked() || this->ui->radioButton_Both->isChecked()) {
+                for(int n = 0; n < word.natives.count(); n++) {
+
+                    QString loc_native = word.natives.at(n).native;
+                    QString ss_lowered = ss.toLower();
+
+                    if(this->ui->checkBox_Match_Case->isChecked()) {
+                        if(this->ui->checkBox_Match_Whole->isChecked()) {
+                            if(loc_native == ss) {
+                                foundFlag = true;
+                            }
+                        } else {
+                            if(loc_native.contains(ss)) {
+                                foundFlag = true;
+                            }
+                        }
+                    } else {
+                        QString loc_native_lowered = loc_native.toLower();
+                        if(this->ui->checkBox_Match_Whole->isChecked()) {
+                            if(loc_native_lowered == ss_lowered) {
+                                foundFlag = true;
+                            }
+                        } else {
+                            if(loc_native_lowered.contains(ss_lowered)) {
+                                foundFlag = true;
+                            }
+                        }
+                    }
+
+                    if(this->ui->checkBox_Search_Example->isChecked()) {
+                        QString loc_expamle = word.natives.at(n).example;
+                        if(this->ui->checkBox_Match_Case->isChecked()) {
+                            if(loc_expamle.contains(ss)) {
+                                foundFlag = true;
+                            }
+                        } else {
+                            QString loc_example_lowered = loc_expamle.toLower();
+                            if(loc_example_lowered.contains(ss_lowered)){
+                                foundFlag = true;
+                            }
+                        }
+                    }
+
+                }
+            }
+
             if(foundFlag) {
                 QString result = pLesson->path + '\n';
                 result.append(word.foreign + '\n');

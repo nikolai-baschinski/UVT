@@ -83,9 +83,39 @@
         <translation>Zeile löschen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="207"/>
+        <location filename="mainwindow.ui" line="197"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="220"/>
+        <source>Foreign</source>
+        <translation>Fremdwort</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="233"/>
+        <source>Native</source>
+        <translation>Übersetzung</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="246"/>
+        <source>Both</source>
+        <translation>Beide</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="259"/>
+        <source>Case Sensitive</source>
+        <translation>Groß- und Kleinschreibung</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="272"/>
+        <source>Match whole word only</source>
+        <translation>Exakte Übereinstimmung</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="285"/>
+        <source>Search in example text</source>
+        <translation>Beispiel durchsuchen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="96"/>
@@ -105,95 +135,101 @@
         <translation>Suchen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="61"/>
+        <location filename="mainwindow.cpp" line="59"/>
         <source>Example</source>
         <translation>Beispiel</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="93"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Create new lessson</source>
         <translation>Neuen Lektion anlegen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="93"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Text Files (*.txt);;All Files (*)</source>
         <translation>Text (*.txt);;Alle (*)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
-        <location filename="mainwindow.cpp" line="246"/>
-        <location filename="mainwindow.cpp" line="317"/>
-        <location filename="mainwindow.cpp" line="333"/>
-        <location filename="mainwindow.cpp" line="338"/>
-        <location filename="mainwindow.cpp" line="350"/>
-        <location filename="mainwindow.cpp" line="362"/>
-        <location filename="mainwindow.cpp" line="433"/>
-        <location filename="mainwindow.cpp" line="540"/>
-        <location filename="mainwindow.cpp" line="579"/>
+        <location filename="mainwindow.cpp" line="126"/>
+        <location filename="mainwindow.cpp" line="296"/>
+        <location filename="mainwindow.cpp" line="371"/>
+        <location filename="mainwindow.cpp" line="557"/>
+        <location filename="mainwindow.cpp" line="598"/>
+        <location filename="mainwindow.cpp" line="616"/>
+        <location filename="mainwindow.cpp" line="621"/>
+        <location filename="mainwindow.cpp" line="633"/>
+        <location filename="mainwindow.cpp" line="645"/>
+        <location filename="mainwindow.cpp" line="718"/>
+        <location filename="mainwindow.cpp" line="740"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="126"/>
         <source>Lesson with this name exists already. Please choose another name.</source>
         <translation>EIne Lektion mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Namen aus.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="122"/>
-        <location filename="mainwindow.cpp" line="137"/>
+        <location filename="mainwindow.cpp" line="156"/>
+        <location filename="mainwindow.cpp" line="173"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="122"/>
+        <location filename="mainwindow.cpp" line="156"/>
         <source>Could not create file: </source>
         <translation>Diese Datei konnte nicht erzeugt werden: </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="137"/>
+        <location filename="mainwindow.cpp" line="173"/>
         <source>Internal error occured. Lesson pointer 0.</source>
         <translation>Ein interner Fehler ist aufgetreten. Der Lesson-Zeiger ist 0.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="231"/>
+        <location filename="mainwindow.cpp" line="281"/>
         <source>Choose a folder please.</source>
         <translation>Bitte einen Ordner wählen.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="246"/>
+        <location filename="mainwindow.cpp" line="296"/>
         <source>Folder already included.</source>
         <translation>Dieser Ordner existiert bereits.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="317"/>
+        <location filename="mainwindow.cpp" line="371"/>
         <source>Please select a lesson for test.</source>
         <translation>Bitte wählen Sie eine Lektion zum Testen aus.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="333"/>
-        <location filename="mainwindow.cpp" line="338"/>
-        <location filename="mainwindow.cpp" line="350"/>
-        <location filename="mainwindow.cpp" line="362"/>
+        <location filename="mainwindow.cpp" line="616"/>
+        <location filename="mainwindow.cpp" line="621"/>
+        <location filename="mainwindow.cpp" line="633"/>
+        <location filename="mainwindow.cpp" line="645"/>
         <source>Please check content in line </source>
         <translation>Bitte prüfen Sie den Inhalt in Zeile </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="490"/>
+        <location filename="mainwindow.cpp" line="740"/>
+        <source>Changes pending. Save?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="441"/>
         <source>Please enter at least three letters for the search text.</source>
         <translation>Bitte mindestens drei Buchstaben für den Suchtext eingeben.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="521"/>
+        <location filename="mainwindow.cpp" line="537"/>
         <source>Nothing found</source>
         <translation>Nichts gefunden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="540"/>
+        <location filename="mainwindow.cpp" line="557"/>
         <source>Please restart the application.</source>
         <translation>Bitte die Anwendung neustarten.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="578"/>
+        <location filename="mainwindow.cpp" line="597"/>
         <source>This word exists in lesson
 </source>
         <translation>Diese Vokabel existiert in der Lektion
@@ -223,35 +259,35 @@
         <translation>Weiter</translation>
     </message>
     <message>
-        <location filename="test.ui" line="123"/>
+        <location filename="test.ui" line="126"/>
         <source>Status</source>
         <translation>Status</translation>
     </message>
     <message>
         <location filename="test.cpp" line="31"/>
-        <location filename="test.cpp" line="174"/>
+        <location filename="test.cpp" line="209"/>
         <source>Tested: </source>
         <translation>Getestet: </translation>
     </message>
     <message>
         <location filename="test.cpp" line="31"/>
-        <location filename="test.cpp" line="174"/>
+        <location filename="test.cpp" line="209"/>
         <source> out of </source>
         <translation> von </translation>
     </message>
     <message>
-        <location filename="test.cpp" line="37"/>
+        <location filename="test.cpp" line="38"/>
         <source>Test of the lesson </source>
         <translation>Testen der Lektion </translation>
     </message>
     <message>
-        <location filename="test.cpp" line="160"/>
-        <location filename="test.cpp" line="177"/>
+        <location filename="test.cpp" line="212"/>
+        <location filename="test.cpp" line="260"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="test.cpp" line="177"/>
+        <location filename="test.cpp" line="212"/>
         <source>Test finished successfully.</source>
         <translation>Der Test wurde erfolgreich abgeschlossen.</translation>
     </message>
