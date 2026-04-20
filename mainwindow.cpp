@@ -165,6 +165,7 @@ void MainWindow::pushButton_CreateNewLesson()
                 }
 
                 this->checkStringMemory = pLesson->checkString;
+                this->selectedRowMemory = this->ui->listWidget->currentRow();
 
             } else {
                 QMessageBox::warning(this, tr("Error"), tr("Could not create file: ") + file.errorString());
