@@ -7,6 +7,7 @@
 #include <QKeyEvent>
 #include <QFileDialog>
 #include <QShortcut>
+#include <QTimer>
 #include "test_configuration.h"
 #include "applicationsettings.h"
 
@@ -31,6 +32,7 @@ MainWindow::MainWindow(QLocale paramApplicationLocale, QWidget *parent)
 
     this->installEventFilter(this);
     this->ui->lineEdit_SearchString->installEventFilter(this);
+    ui->tableWidget->installEventFilter(this);
     this->applicationLocale = paramApplicationLocale;
     this->CtrlButtonPressed = false;
 
@@ -258,6 +260,44 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         if (obj == this->ui->lineEdit_SearchString && keyEvent->key() == Qt::Key_Tab) {
             this->ui->pushButton_Search->setDefault(true);
             this->ui->pushButton_Search->setFocus();
+            return true;
+        }
+
+        if (keyEvent->key() == Qt::Key_F2) {
+            QTableWidget *table = ui->tableWidget;
+
+            if (qobject_cast<QLineEdit *>(table->focusWidget())) {
+                return true;
+            }
+
+            int row = -1;
+            int col = 0;
+
+            if (table->hasFocus() && table->currentRow() >= 0) {
+                row = table->currentRow();
+            } else {
+                row = 0;
+                col = 0;
+                table->setFocus();
+            }
+
+            if (row >= 0 && col >= 0) {
+                if (!table->item(row, col)) {
+                    table->setItem(row, col, new QTableWidgetItem(""));
+                }
+
+                table->setCurrentCell(row, col);
+                table->editItem(table->item(row, col));
+
+                QTimer::singleShot(0, this, [table]()
+                                   {
+                                       QLineEdit *lineEdit = table->findChild<QLineEdit *>();
+                                       if (lineEdit) {
+                                           lineEdit->setCursorPosition(lineEdit->text().length());
+                                           lineEdit->deselect();
+                                       }
+                                   });
+            }
             return true;
         }
     }
