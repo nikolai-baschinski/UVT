@@ -635,7 +635,7 @@ void MainWindow::onCellContentChanged(int row, int column)
 {
     this->ui->pushButton_Save->setEnabled(true);
     if(column == 0) {
-        QString newValue = ui->tableWidget->item(row, column)->text();
+        QString newValue = ui->tableWidget->item(row, column)->text().trimmed();
         if(newValue.length() < 3) {
             return;
         }
